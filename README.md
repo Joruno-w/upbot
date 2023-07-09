@@ -5,10 +5,10 @@
 Automatically Update Packages
 
 ## 🦄️ Feature
-- [x] auto create branch
-- [x] auto compile branch
-- [x] auto deploy branch
-- [x] auto online branch
+- auto create branch
+- auto compile branch
+- auto deploy branch
+- auto online branch
 
 ## 📦 Install
 ```bash
