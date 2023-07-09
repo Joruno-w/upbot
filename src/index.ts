@@ -2,6 +2,11 @@ import puppeteer from 'puppeteer'
 import tesseract from 'tesseract.js'
 import { createCanvas, loadImage } from 'canvas'
 
+interface LoginOptions {
+  name: string
+  pwd: string
+}
+
 // 扫描验证码，识别文字
 async function OCR(src: string) {
   try {
@@ -58,21 +63,16 @@ async function extractColorText(imagePath: string, targetColor: number[]) {
 }
 
 // 初始化函数
-async function init() {
-  const url
-    = 'https://zzsso.zhuanspirit.com/user/login?host=beetle.zhuanspirit.com&loginType=1&scheme=https&urlParam=%2Fworkbench%2Fbranching'
-  // const url = "https://beetle.zhuanspirit.com/workbench/branching";
+export default async (url: string, options: LoginOptions) => {
   const browser = await puppeteer.launch({
     headless: 'new',
-    executablePath:
-      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   })
   const page = await browser.newPage()
   await page.goto(url)
   await page.waitForSelector('.change-pc___2wS5N')
   await page.click('.change-pc___2wS5N')
-  await page.type('#userName', 'wangshengliang')
-  await page.type('#password', 'WaNg79565713!')
+  await page.type('#userName', options.name)
+  await page.type('#password', options.pwd)
   let cookies = await page.cookies()
   while (cookies && cookies.length === 0) {
     await page.waitForSelector('.captcha-img___5RY6i')
@@ -87,5 +87,3 @@ async function init() {
   }
   // await browser.close();
 }
-
-init()
