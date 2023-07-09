@@ -1,9 +1,32 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import puppeteer from 'puppeteer'
-import tesseract from 'tesseract.js'
-import ora from 'ora'
-import c from 'kleur'
-import inquirer from 'inquirer'
 import { createCanvas, loadImage } from 'canvas'
+import tesseract from 'tesseract.js'
+import inquirer from 'inquirer'
+import ora from 'ora'
+import ini from 'ini'
+import c from 'kleur'
+
+const customRcPath = process.env.UPBOT_CONFIG_FILE
+
+const home = process.platform === 'win32'
+  ? process.env.USERPROFILE
+  : process.env.HOME
+
+const defaultRcPath = path.join(home || '~/', '.upbotrc')
+
+const rcPath = customRcPath || defaultRcPath
+
+interface Config {
+  directory: string
+}
+
+const defaultConfig: Config = {
+  directory: '~/Desktop/zhuanzhuan',
+}
+
+const config: Config = Object.assign({}, defaultConfig, ini.parse(fs.readFileSync(rcPath, 'utf-8')))
 
 // 扫描验证码，识别文字
 async function OCR(src: string): Promise<string> {
