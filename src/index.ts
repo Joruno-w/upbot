@@ -1,21 +1,20 @@
 import puppeteer from 'puppeteer'
 import tesseract from 'tesseract.js'
+import ora from 'ora'
+import c from 'kleur'
+import inquirer from 'inquirer'
 import { createCanvas, loadImage } from 'canvas'
 
-interface LoginOptions {
-  name: string
-  pwd: string
-}
-
 // 扫描验证码，识别文字
-async function OCR(src: string) {
+async function OCR(src: string): Promise<string> {
   try {
     const {
       data: { text },
     } = await tesseract.recognize(src)
-    return text
+    return text.replace(/\s+/g, '')
   }
-  catch (error: any) {
+  catch (e: any) {
+    console.log(e)
     return ''
   }
 }
@@ -25,7 +24,7 @@ function delay(duration?: number) {
   return new Promise(resolve => setTimeout(resolve, duration))
 }
 
-// 对图片做转换，将与目标颜色最接近的像素设为白色，其余像素设为黑色
+// 对图片做转换，将与目标颜色最接近的像素设为白色，其余像素设为黑色，方便OCR识别
 async function extractColorText(imagePath: string, targetColor: number[]) {
   // 加载图片
   const image = await loadImage(imagePath)
@@ -63,7 +62,20 @@ async function extractColorText(imagePath: string, targetColor: number[]) {
 }
 
 // 初始化函数
-export default async (url: string, options: LoginOptions) => {
+async function login(url: string) {
+  const options = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'name',
+      message: '请输入账号：',
+    },
+    {
+      type: 'password',
+      name: 'pwd',
+      message: '请输入密码：',
+      mask: '*',
+    },
+  ])
   const browser = await puppeteer.launch({
     headless: 'new',
   })
@@ -71,19 +83,32 @@ export default async (url: string, options: LoginOptions) => {
   await page.goto(url)
   await page.waitForSelector('.change-pc___2wS5N')
   await page.click('.change-pc___2wS5N')
-  await page.type('#userName', options.name)
-  await page.type('#password', options.pwd)
+  await page.type('#userName', options.name || 'wangshengliang')
+  await page.type('#password', options.pwd || 'WaNg79565713!')
   let cookies = await page.cookies()
+  const spinner = ora('验证码识别中...').start()
   while (cookies && cookies.length === 0) {
     await page.waitForSelector('.captcha-img___5RY6i')
-    const src = await page.$eval('.captcha-img___5RY6i', (img) => {
-      return img.getAttribute('src')
-    })
+    const src = await page.$eval('.captcha-img___5RY6i', img =>
+      img.getAttribute('src'),
+    )
     const text = await extractColorText(src, [255, 2, 0])
-    await page.type('#graphicsCode', '')
-    await page.type('#graphicsCode', text)
+    const inputHandle = (await page.$('#graphicsCode'))!
+    inputHandle.click({
+      clickCount: 3,
+    })
+    inputHandle.type('')
+    await delay(1000)
+    inputHandle.type(text)
+    await page.click('button[type="submit"]')
     await delay(1000)
     cookies = await page.cookies()
+    if (cookies.length > 0)
+      spinner.succeed(c.green('登录成功'))
+    else
+      spinner.text = '验证码错误，正在重试...'
   }
-  // await browser.close();
+  await browser.close()
 }
+
+login('https://beetle.zhuanspirit.com')
