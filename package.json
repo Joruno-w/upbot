@@ -50,6 +50,11 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "puppeteer": "^20.8.0",
+    "tesseract.js": "^4.1.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.38.4",
     "@types/node": "^18.15.11",
@@ -70,10 +75,5 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
-  },
-  "dependencies": {
-    "canvas": "^2.11.2",
-    "puppeteer": "^20.8.0",
-    "tesseract.js": "^4.1.1"
   }
 }
