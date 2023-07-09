@@ -1,7 +1,7 @@
 {
   "name": "upbot",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@7.9.5",
   "description": "Automatically Update Packages",
   "author": "Joruno-w",
@@ -14,9 +14,10 @@
   },
   "bugs": "https://github.com/Joruno-w/upbot/issues",
   "keywords": [
-    "pkg",
-    "starter",
-    "template"
+    "update",
+    "auto",
+    "upgrade",
+    "bot"
   ],
   "sideEffects": false,
   "exports": {
