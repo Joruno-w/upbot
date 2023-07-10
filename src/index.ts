@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import puppeteer from 'puppeteer'
+// 如下载不下来，可以参考https://github.com/Automattic/node-canvas#installation
 import { createCanvas, loadImage } from 'canvas'
 import tesseract from 'tesseract.js'
 import inquirer from 'inquirer'
@@ -10,9 +11,8 @@ import c from 'kleur'
 
 const customRcPath = process.env.UPBOT_CONFIG_FILE
 
-const home = process.platform === 'win32'
-  ? process.env.USERPROFILE
-  : process.env.HOME
+const home
+  = process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME
 
 const defaultRcPath = path.join(home || '~/', '.upbotrc')
 
@@ -26,7 +26,13 @@ const defaultConfig: Config = {
   directory: '~/Desktop/zhuanzhuan',
 }
 
-const config: Config = Object.assign({}, defaultConfig, ini.parse(fs.readFileSync(rcPath, 'utf-8')))
+function getConfig() {
+  return Object.assign(
+    {},
+    defaultConfig,
+    ini.parse(fs.readFileSync(rcPath, 'utf-8')),
+  )
+}
 
 // 扫描验证码，识别文字
 async function OCR(src: string): Promise<string> {
@@ -108,6 +114,14 @@ async function login(url: string) {
   await page.click('.change-pc___2wS5N')
   await page.type('#userName', options.name)
   await page.type('#password', options.pwd)
+
+  page.on('response', async (response) => {
+    if (response.url().includes('login')) {
+      const info = await response.json()
+      console.log(info)
+    }
+  })
+
   let cookies = await page.cookies()
   const spinner = ora('验证码识别中...').start()
   while (cookies && cookies.length === 0) {
@@ -128,8 +142,9 @@ async function login(url: string) {
     cookies = await page.cookies()
     if (cookies.length > 0)
       spinner.succeed(c.green('登录成功'))
-    else
-      spinner.text = '验证码错误，正在重试...'
+    else spinner.text = '验证码错误，正在重试...'
   }
   await browser.close()
 }
+
+// login()
