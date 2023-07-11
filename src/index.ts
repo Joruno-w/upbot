@@ -111,8 +111,8 @@ async function login(url: string) {
   await page.goto(url)
   await page.waitForSelector('.change-pc___2wS5N')
   await page.click('.change-pc___2wS5N')
-  await page.type('#userName', options.name || 'wangshengliang')
-  await page.type('#password', options.pwd || 'WaNg79565713!')
+  await page.type('#userName', options.name)
+  await page.type('#password', options.pwd)
   let cookies = await page.cookies()
   const spinner = ora('验证码识别中...').start()
   while (cookies && cookies.length === 0) {
@@ -135,7 +135,7 @@ async function login(url: string) {
       spinner.succeed(c.green('登录成功'))
     else spinner.text = '验证码错误，正在重试...'
   }
-  // await browser.close()
+  await browser.close()
 }
 
-login('https://beetle.zhuanspirit.com')
+// login()
