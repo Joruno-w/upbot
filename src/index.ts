@@ -4,7 +4,7 @@ import puppeteer from 'puppeteer'
 // 如下载不下来，可以参考https://github.com/Automattic/node-canvas#installation
 import { createCanvas, loadImage } from 'canvas'
 import tesseract from 'tesseract.js'
-import inquirer from 'inquirer'
+import prompts from 'prompts'
 import ora from 'ora'
 import ini from 'ini'
 import c from 'kleur'
@@ -92,9 +92,9 @@ async function extractColorText(imagePath: string, targetColor: number[]) {
 
 // 初始化函数
 async function login(url: string) {
-  const options = await inquirer.prompt([
+  const options = await prompts([
     {
-      type: 'input',
+      type: 'text',
       name: 'name',
       message: '请输入账号：',
     },
@@ -102,26 +102,17 @@ async function login(url: string) {
       type: 'password',
       name: 'pwd',
       message: '请输入密码：',
-      mask: '*',
     },
   ])
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: false,
   })
   const page = await browser.newPage()
   await page.goto(url)
   await page.waitForSelector('.change-pc___2wS5N')
   await page.click('.change-pc___2wS5N')
-  await page.type('#userName', options.name)
-  await page.type('#password', options.pwd)
-
-  page.on('response', async (response) => {
-    if (response.url().includes('login')) {
-      const info = await response.json()
-      console.log(info)
-    }
-  })
-
+  await page.type('#userName', options.name || 'wangshengliang')
+  await page.type('#password', options.pwd || 'WaNg79565713!')
   let cookies = await page.cookies()
   const spinner = ora('验证码识别中...').start()
   while (cookies && cookies.length === 0) {
@@ -144,7 +135,7 @@ async function login(url: string) {
       spinner.succeed(c.green('登录成功'))
     else spinner.text = '验证码错误，正在重试...'
   }
-  await browser.close()
+  // await browser.close()
 }
 
-// login()
+login('https://beetle.zhuanspirit.com')
