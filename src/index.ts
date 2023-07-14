@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import puppeteer from 'puppeteer'
-// 如下载不下来，可以参考https://github.com/Automattic/node-canvas#installation
+// 如下载不下来(有兼容性问题)，可以参考 https://github.com/Automattic/node-canvas#installation
 import { createCanvas, loadImage } from 'canvas'
 import tesseract from 'tesseract.js'
 import prompts from 'prompts'
