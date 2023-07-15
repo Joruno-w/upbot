@@ -10,7 +10,6 @@ import ini from 'ini'
 import c from 'kleur'
 
 const customRcPath = process.env.UPBOT_CONFIG_FILE
-
 const home
   = process.platform === 'win32' ? process.env.USERPROFILE : process.env.HOME
 
