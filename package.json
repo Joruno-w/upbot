@@ -19,6 +19,9 @@
     "upgrade",
     "bot"
   ],
+  "bin": {
+    "upbot": "bin/upbot"
+  },
   "sideEffects": false,
   "exports": {
     ".": {
