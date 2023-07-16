@@ -1,7 +1,7 @@
 {
   "name": "upbot",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "packageManager": "pnpm@7.9.5",
   "description": "Automatically Update Packages",
   "author": "Joruno-w",
@@ -20,7 +20,7 @@
     "bot"
   ],
   "bin": {
-    "upbot": "bin/upbot"
+    "upbot": "bin/upbot.js"
   },
   "sideEffects": false,
   "exports": {
