@@ -1,18 +1,7 @@
-// import { describe, expect, it } from "vitest";
-// import upbot, { getConfig } from "../src";
+import { describe, expect, it } from 'vitest'
 
-// describe("test upbot", () => {
-//   it("Get Config", () => {
-//     expect(getConfig()).toMatchInlineSnapshot(`
-//       {
-//         "directory": "~/Desktop/zhuanzhuan",
-//         "name": "wangshengliang",
-//         "pwd": "WaNg79565713!",
-//         "url": "https://beetle.zhuanspirit.com/",
-//       }
-//     `);
-//   });
-//   it("Get Cookies", async () => {
-//     expect(await upbot()).toMatchInlineSnapshot();
-//   });
-// });
+describe('test upbot', () => {
+  it('sum', () => {
+    expect(1 + 1).toBe(2)
+  })
+})
