@@ -23,7 +23,6 @@ export async function getAllDevelopBranches() {
     .filter(
       (item: any) =>
         item.stateName === '开发中'
-          && item.createor === '王声亮(wangshengliang)',
     )
     .map((item: any) => item.branchName)
 }
