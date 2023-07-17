@@ -6,6 +6,7 @@ import { createCanvas, loadImage } from 'canvas'
 import tesseract from 'tesseract.js'
 import prompts from 'prompts'
 import ora from 'ora'
+import axios from 'axios'
 import ini from 'ini'
 import c from 'kleur'
 
@@ -25,8 +26,8 @@ interface Config {
   url: string
 }
 
-const defaultConfig: Config = {
-  directory: '~/Desktop/zhuanzhuan',
+export const defaultConfig: Config = {
+  directory: '',
   name: '',
   pwd: '',
   url: '',
@@ -41,7 +42,7 @@ export function getConfig() {
 }
 
 // 扫描验证码，识别文字
-async function OCR(src: string): Promise<string> {
+export async function OCR(src: string): Promise<string> {
   try {
     const {
       data: { text },
@@ -55,12 +56,12 @@ async function OCR(src: string): Promise<string> {
 }
 
 // 延时函数
-function delay(duration?: number) {
+export function delay(duration?: number) {
   return new Promise(resolve => setTimeout(resolve, duration))
 }
 
 // 对图片做转换，将与目标颜色最接近的像素设为白色，其余像素设为黑色，方便OCR识别
-async function extractColorText(imagePath: string, targetColor: number[]) {
+export async function extractColorText(imagePath: string, targetColor: number[]) {
   // 加载图片
   const image = await loadImage(imagePath)
   // 创建画布
@@ -104,7 +105,7 @@ export default async function login(url?: string) {
     {
       type: 'confirm',
       name: 'configfile',
-      message: '是否按照配置文件(.upbotrc)里的参数执行此命令？',
+      message: '是否按照配置文件里的参数执行此命令？',
       initial: true,
     },
     {
@@ -153,22 +154,26 @@ export default async function login(url?: string) {
   return cookies.map(({ name, value }) => `${name}=${value}`).join('; ')
 }
 
-// async function getAllBranches() {
-//   const url = ''
-//   const { data } = await axios.get(url, {
-//     params: {
-//       p_pageIndex: 1,
-//       branchState: 0,
-//     },
-//     withCredentials: true,
-//     headers: {
-//       cookie: await login(),
-//     },
-//   })
-//   console.log(
-//     'getAllBranches---->',
-//     data.respData.datalist
-//       .filter((item: any) => item.stateName === '开发中')
-//       .map((item: any) => item.branchName),
-//   )
-// }
+async function getAllDevelopBranches() {
+  const url
+    = 'https://beetle.zhuanspirit.com/apiBeetle/project/branchingmyself'
+  const { data } = await axios.get(url, {
+    params: {
+      p_pageIndex: 1,
+      branchState: 0,
+    },
+    headers: {
+      cookie: await login(),
+    },
+  })
+  console.log(
+    'getAllBranches---->',
+    data.respData.datalist
+      .filter(
+        (item: any) =>
+          item.stateName === '开发中'
+          && item.createor === '王声亮(wangshengliang)',
+      )
+      .map((item: any) => item.branchName),
+  )
+}
