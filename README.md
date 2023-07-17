@@ -9,6 +9,11 @@ Automatically Update Packages
 - auto compile branch
 - auto deploy branch
 - auto online branch
+
+## 📦 Install
+```bash
+npm i upbot -g
+```
 ## 💡 Config
 ```bash
 # ~/.upbotrc.ini
@@ -24,10 +29,6 @@ url=xxx
 export NI_CONFIG_FILE="$HOME/.config/ni/nirc"
 ```
 
-## 📦 Install
-```bash
-npm i upbot -g
-```
 ## 🥳 Usage
 ## License
 [MIT](./LICENSE) License © 2023 [Joruno-w](https://github.com/Joruno-w)
