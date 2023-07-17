@@ -14,6 +14,7 @@ cd(directory)
 fs.readdirSync('.').forEach((name) => {
   console.log(name)
 })
+
 // for await (const dir of Deno.readDir('.')) {
 //   if (dir.isDirectory) {
 //     cd(dir.name)

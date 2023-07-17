@@ -61,7 +61,10 @@ export function delay(duration?: number) {
 }
 
 // 对图片做转换，将与目标颜色最接近的像素设为白色，其余像素设为黑色，方便OCR识别
-export async function extractColorText(imagePath: string, targetColor: number[]) {
+export async function extractColorText(
+  imagePath: string,
+  targetColor: number[],
+) {
   // 加载图片
   const image = await loadImage(imagePath)
   // 创建画布
@@ -169,10 +172,7 @@ async function getAllDevelopBranches() {
   console.log(
     'getAllBranches---->',
     data.respData.datalist
-      .filter(
-        (item: any) =>
-          item.stateName === '开发中'
-      )
+      .filter((item: any) => item.stateName === '开发中')
       .map((item: any) => item.branchName),
   )
 }
