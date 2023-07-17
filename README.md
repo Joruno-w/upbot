@@ -4,10 +4,25 @@
 
 Automatically Update Packages
 ## 🦄️ Feature
+- auto login
 - auto create branch
 - auto compile branch
 - auto deploy branch
 - auto online branch
+## 💡 Config
+```bash
+# ~/.upbotrc.ini
+# config information
+directory=xxx
+name=xxx
+pwd=xxx
+url=xxx
+```
+```bash
+# ~/.bashrc
+# custom configuration file path
+export NI_CONFIG_FILE="$HOME/.config/ni/nirc"
+```
 
 ## 📦 Install
 ```bash
