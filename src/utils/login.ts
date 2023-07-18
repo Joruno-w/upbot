@@ -7,7 +7,7 @@ import { delay } from './common'
 import { getText } from './OCR'
 
 // 登录并返回cookies
-export async function login(url?: string): Promise<string> {
+export async function login(url?: string) {
   const config = getConfig()
   url = url || config.url
   const options = await prompts([
@@ -29,7 +29,7 @@ export async function login(url?: string): Promise<string> {
     },
   ])
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: false,
   })
   const page = await browser.newPage()
   await page.goto(url)
@@ -59,6 +59,23 @@ export async function login(url?: string): Promise<string> {
       spinner.succeed(c.green('登录成功'))
     else spinner.text = '验证码错误，正在重试...'
   }
-  await browser.close()
-  return cookies.map(({ name, value }) => `${name}=${value}`).join('; ')
+  // TODO: 点击某一项
+  await page.waitForSelector('[data-row-key="4267-15"] > td:nth-child(2) > a')
+  const href = await page.$eval(
+    '[data-row-key="4267-15"] > td:nth-child(2) > a',
+    a => a.href,
+  )
+  await page.goto(href)
+  // 编译（重新构建｜取消重新构建）
+  // await page.waitForSelector('div[data-node-key="history_0"] .ant-card-extra > button')
+  // await page.click('div[data-node-key="history_0"] .ant-card-extra > button')
+
+  // await page.waitForSelector('.ant-modal-footer .ant-btn-primary')
+  // await page.click('.ant-modal-footer .ant-btn-primary')
+  // await page.waitForSelector('tr:nth-child(1) > .ant-space-item > button:not([disabled])')
+  // await page.click('tr:nth-child(1) > .ant-space-item > button:not([disabled])')
+  // await browser.close()
+  return {
+    cookie: cookies.map(({ name, value }) => `${name}=${value}`).join('; '),
+  }
 }

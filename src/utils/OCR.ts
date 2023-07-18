@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises'
+import { unlink } from 'node:fs/promises'
 import { Buffer } from 'node:buffer'
 import tesseract from 'tesseract.js'
 import Jimp from 'jimp'
@@ -32,6 +32,6 @@ export async function getText(base64Data: string): Promise<string> {
   await image.writeAsync('preprocessed.png')
   // OCR 识别验证码
   const text = await OCR('preprocessed.png')
-  await fs.unlink('preprocessed.png')
+  await unlink('preprocessed.png')
   return text
 }

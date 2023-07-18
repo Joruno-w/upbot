@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 /* eslint-disable no-undef */
-import { getAllDevelopBranches, getConfig } from '../dist/index.mjs'
+import { getConfig } from '../dist/index.mjs'
 
 const { directory } = getConfig()
 if (!directory) {
@@ -9,9 +9,6 @@ if (!directory) {
 }
 
 cd(directory)
-const branches = await getAllDevelopBranches()
-const projects = branches.map(it => it.replace(/(.+)-feature-.+/g, '$1'))
-console.log(projects)
 // fs.readdirSync('.').forEach((name) => {
 //   if (list.includes())
 //     cd(name)

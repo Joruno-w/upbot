@@ -1,19 +1,27 @@
 import axios from 'axios'
 import { login } from './utils'
 
+type Status = '开发中' | '已上线'
+
+interface BranchParams {
+  status?: Status
+}
+
 const API = {
-  branchingmyself: 'https://beetle.zhuanspirit.com/apiBeetle/project/branchingmyself',
+  branchingmyself:
+    'https://beetle.zhuanspirit.com/apiBeetle/project/branchingmyself',
 }
 
 async function getInstance() {
+  const { cookie } = await login()
   return axios.create({
     headers: {
-      cookie: await login(),
+      cookie,
     },
   })
 }
 
-export async function getAllDevelopBranches() {
+export async function getBranches({ status = '开发中' }: BranchParams = {}) {
   const instance = await getInstance()
   const { data } = await instance.get(API.branchingmyself, {
     params: {
@@ -22,9 +30,6 @@ export async function getAllDevelopBranches() {
     },
   })
   return data.respData.datalist
-    .filter(
-      (item: any) =>
-        item.stateName === '开发中',
-    )
+    .filter((item: any) => item.stateName === status)
     .map((item: any) => item.branchName)
 }

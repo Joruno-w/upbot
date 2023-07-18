@@ -1,6 +1,5 @@
 import { Command } from 'commander'
-import zx from 'zx'
-import { getAllDevelopBranches } from './api'
+import { getBranches } from './api'
 
 const program = new Command()
 
@@ -18,6 +17,7 @@ const options = program.opts()
 console.log(options);
 
 (async () => {
-  const res = await getAllDevelopBranches()
-  console.log(res)
+  const projectName = 'b2c_one_page_bizs'
+  const branches = await getBranches()
+  const i = branches.findIndex((branch: any) => branch.startsWith(projectName))
 })()
