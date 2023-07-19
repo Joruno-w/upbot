@@ -9,7 +9,6 @@ Automatically Update Packages
 - auto compile branch
 - auto deploy branch
 - auto online branch
-
 ## 📦 Install
 ```bash
 npm i upbot -g
